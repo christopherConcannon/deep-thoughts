@@ -5,8 +5,9 @@ const { signToken } = require('../utils/auth');
 const resolvers = {
   Query: {
     me: async (parent, args, context) => {
+      // if user has been returned by authMiddleware...ie validated user
       if (context.user) {
-        const userData = await User.findOne({})
+        const userData = await User.findOne({ _id: context.user._id})
           .select('-__v -password')
           .populate('thoughts')
           .populate('friends');
@@ -16,8 +17,9 @@ const resolvers = {
 
       throw new AuthenticationError('Not logged in');
     },
-    // get all thoughts
+    // get all thoughts. parent (1st arg) is a placeholder in this case
     thoughts: async (parent, { username }) => {
+      // if optional username string was passed, use it, otherwise don't
       const params = username ? { username } : {}
       return Thought.find(params).sort({ createdAt: -1 })
     },
@@ -40,9 +42,11 @@ const resolvers = {
         .populate('thoughts');
     }
   },
+
   Mutation: {
     addUser: async (parent, args) => {
       const user = await User.create(args);
+      // sign a token and return an object that combines the token with the user's data
       const token = signToken(user);
 
       return { token, user};
@@ -60,17 +64,18 @@ const resolvers = {
       if (!correctPw) {
         throw new AuthenticationError('Incorrect credentials')
       }
-
+      // if password is correct, sign token and return token and user
       const token = signToken(user);
       return { token, user };
     },
 
     addThought: async (parent, args, context) => {
+      // only logged in users can add thought
       if (context.user) {
         const thought = await Thought.create({ ...args, username: context.user.username });
 
         await User.findByIdAndUpdate(
-          { _id: context.user_id },
+          { _id: context.user._id },
           { $push: { thoughts: thought._id } },
           { new: true }
         );
@@ -83,6 +88,7 @@ const resolvers = {
 
     addReaction: async (parent, { thoughtId, reactionBody }, context) => {
       if (context.user) {
+        // add reaction to Thought's reaction array
         const updatedThought = await Thought.findOneAndUpdate(
           { _id: thoughtId },
           { $push: { reactions: { reactionBody, username: context.user.username } } },
@@ -97,8 +103,10 @@ const resolvers = {
 
     addFriend: async (parent, { friendId }, context) => {
       if (context.user) {
+        // add friend's user id to user's friends array
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
+          // prevent duplicate entries with addToSet
           { $addToSet: { friends: friendId } },
           { new: true }
         ).populate('friends');

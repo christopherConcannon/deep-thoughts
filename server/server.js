@@ -15,6 +15,7 @@ const server = new ApolloServer({
   resolvers,
   // specify context to return what you want available to the resolvers.  in this case we want the headers so we can send the JWTokens
   // context: ({ req }) => req.headers
+  // every request performs an authentication check, and the updated request object will be passed to the resolvers as the context.
   context: authMiddleware
 });
 

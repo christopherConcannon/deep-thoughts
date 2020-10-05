@@ -4,6 +4,7 @@ const secret = 'mysecrestsshhhhhh';
 const expiration = '2h';
 
 module.exports = {
+  // arguments to signToken get added to the encoded token
   signToken: function({ username, email, _id }) {
     const payload = { username, email, _id }
 
@@ -27,9 +28,11 @@ module.exports = {
       return req;
     }
 
+    // we don't want error thrown if user has an invalid token...they should still be able to request and see all thoughts.  so use try...catch to mute the error
     try {
       // decode and attach user data to request object
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
+      console.log(data);
       req.user = data;
     } catch {
       console.log('Invalid token')

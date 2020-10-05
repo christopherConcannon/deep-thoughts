@@ -1,8 +1,9 @@
 // import the gql tagged template function
 const { gql } = require('apollo-server-express');
 
-// create our typeDefs
+// create our typeDefs.  All type definitions need to specify what type of data is expected in return, no matter what
 const typeDefs = gql`
+${/*custom data type*/''}
 type User {
   _id: ID 
   username: String
@@ -20,7 +21,7 @@ type Thought {
   reactionCount: Int
   reactions: [Reaction]
 }
-
+${/* nested in the Thought type */''}
 type Reaction {
   _id: ID
   reactionBody: String
@@ -43,7 +44,8 @@ type Query {
 
 type Mutation {
   login(email: String!, password: String!): Auth
-  addUser(username: String!, email: String!, password: String!): Auth
+  ${/*addUser(username: String!, email: String!, password: String!): Auth*/''}
+  addUser(username: String!, email: String!, password: String!): User
   addThought(thoughtText: String!): Thought
   addReaction(thoughtId: ID!, reactionBody: String!): Thought
   addFriend(friendId: ID!): User
