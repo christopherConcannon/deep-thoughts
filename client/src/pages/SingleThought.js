@@ -1,19 +1,43 @@
 import React from 'react';
+// use for parsing of url to retrieve thought _id
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/react-hooks';
+import { QUERY_THOUGHT } from '../utils/queries';
+
+import ReactionList  from '../components/ReactionList';
+
 
 const SingleThought = props => {
+  const { id: thoughtId } = useParams();
+  console.log(thoughtId);
+  // why don't work?
+  // console.log(id); //   Line 8:15:  'id' is not defined  no-undef
+
+  const { loading, data } = useQuery(QUERY_THOUGHT, {
+    // id property on variables objec will become the $id param in the GraphQL query
+    variables: { id: thoughtId }
+  });
+
+  const thought = data?.thought || {};
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div>
       <div className="card mb-3">
         <p className="card-header">
           <span style={{ fontWeight: 700 }} className="text-light">
-            Username
+            {thought.username}
           </span>{' '}
-          thought on createdAt
+          thought on {thought.createdAt}
         </p>
         <div className="card-body">
-          <p>Thought Text</p>
+          <p>{thought.thoughtText}</p>
         </div>
       </div>
+      {thought.reactionCount > 0 && <ReactionList reactions={thought.reactions} />}
     </div>
   );
 };
