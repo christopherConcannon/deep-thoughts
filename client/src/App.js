@@ -15,6 +15,18 @@ import Profile from './pages/Profile';
 import Signup from './pages/Signup';
 
 const client = new ApolloClient({
+  // instruct Apllo instance to retrieve token from localStorage every time we make a GraphQL request
+  request: operation => {
+    const token = localStorage.getItem('id_token');
+
+    // set headers to include token whether request needs it or not.  if it does not, the resolver won't check for it
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : ''
+      }
+    })
+  },
+
 	// hardcoded absolute path for development only
 	// uri : 'http://localhost:3001/graphql'
 
