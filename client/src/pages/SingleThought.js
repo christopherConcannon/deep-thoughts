@@ -1,10 +1,14 @@
 import React from 'react';
+import ReactionList  from '../components/ReactionList';
+import ReactionForm  from '../components/ReactionForm';
+
 // use for parsing of url to retrieve thought _id
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import { QUERY_THOUGHT } from '../utils/queries';
 
-import ReactionList  from '../components/ReactionList';
+import Auth from '../utils/auth';
+
 
 
 const SingleThought = props => {
@@ -38,6 +42,7 @@ const SingleThought = props => {
         </div>
       </div>
       {thought.reactionCount > 0 && <ReactionList reactions={thought.reactions} />}
+      {Auth.loggedIn() && <ReactionForm thoughtId={thought._id} />}
     </div>
   );
 };
