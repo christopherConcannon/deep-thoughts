@@ -27,6 +27,7 @@ const Login = (props) => {
         variables: { ...formState }
       });
       console.log(data);
+      // Save token to localStorage and redirect to homepage
       Auth.login(data.login.token)
     } catch (e) {
       console.error(e);

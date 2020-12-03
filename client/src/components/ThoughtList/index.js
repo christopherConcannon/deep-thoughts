@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+// GraphQL query results coming as props from Home parent component (useQuery)
 const ThoughtList = ({ thoughts, title }) => {
+  // if there's no data yet, show msg
 	if (!thoughts.length) {
 		return <h3>No Thoughts Yet</h3>;
 	}

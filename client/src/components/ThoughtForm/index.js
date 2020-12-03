@@ -7,10 +7,14 @@ const ThoughtForm = () => {
 	const [ thoughtText, setText ] = useState('');
 	const [ characterCount, setCharacterCount ] = useState(0);
 
-	// the addThought() function will run the actual mutation. The error variable will initially be undefined but can change depending on if the mutation failed.
+  // the addThought() function will run the actual mutation. The error variable will initially be undefined but can change depending on if the mutation failed.
+  
+
 	const [ addThought, { error } ] = useMutation(ADD_THOUGHT, {
+      // manually insert the new thought object into the cached array so component will re-render with new thought without a call to the server. The useMutation Hook can include an update function that allows us to update the cache of any related queries. The query we'll need to update is QUERY_THOUGHTS.  This will re-render the Home view with the updated thoughts without having to refresh browser to make another call to the server for new data
     // addThought is the new thought just created
     update(cache, {data: { addThought } }) {
+      // wrap QUERY_THOUGHTS cache update in try/catch so it won't block QUERY_ME cache update below if there is an error ie profile route visited without first visiting home route
       try {     
         // read what's currently in the cache and store it in thoughts const. could potentially not exist yet, so wrap in a try...catch    
         const { thoughts } = cache.readQuery({ query: QUERY_THOUGHTS });
@@ -24,6 +28,7 @@ const ThoughtForm = () => {
         console.error(e)
       }
 
+      // need to update QUERY_ME cache so that Profile view will re-render without browser refresh
       // update me object's cache, appending new thought to the end of the array
       const { me } = cache.readQuery({ query: QUERY_ME });
       cache.writeQuery({

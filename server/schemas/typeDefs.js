@@ -46,6 +46,7 @@ type Query {
 }
 
 type Mutation {
+  ${/* return Auth type because we want the token */''}
   login(email: String!, password: String!): Auth
   addUser(username: String!, email: String!, password: String!): Auth
   addThought(thoughtText: String!): Thought

@@ -14,8 +14,9 @@ import SingleThought from './pages/SingleThought';
 import Profile from './pages/Profile';
 import Signup from './pages/Signup';
 
+// ApolloClient will help us get data from components once we pass it through with ApolloProvider
 const client = new ApolloClient({
-  // instruct Apllo instance to retrieve token from localStorage every time we make a GraphQL request
+  // instruct Apollo instance to retrieve token from localStorage every time we make a GraphQL request
   request: operation => {
     const token = localStorage.getItem('id_token');
 
@@ -27,6 +28,8 @@ const client = new ApolloClient({
     })
   },
 
+  // establish new connection to the GraphQL server
+
 	// hardcoded absolute path for development only
 	// uri : 'http://localhost:3001/graphql'
 
@@ -36,6 +39,7 @@ const client = new ApolloClient({
 
 function App() {
 	return (
+    // Provider provides data to all components.  everything it wraps will eventually have access to the server's API data throught the client
 		<ApolloProvider client={client}>
 			<Router>
 				<div className="flex-column justify-flex-start min-100-vh">

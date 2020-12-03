@@ -28,7 +28,8 @@ const Signup = () => {
       const { data } = await addUser({
         variables: { ...formState } 
       });
-      console.log(data);
+      // console.log(data);
+      // Save token to localStorage and redirect to homepage
       Auth.login(data.addUser.token)
     } catch(e) {
       console.error(e)

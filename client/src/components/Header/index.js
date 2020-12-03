@@ -17,16 +17,19 @@ const Header = () => {
 
 				<nav className="text-center">
 					{Auth.loggedIn() ? (
-						<React.Fragment>
+            // Prettier throws unexpected token msg on this syntax for <React.Fragment /> on save, but it still compiles so no worries
+						<>
 							<Link to="/profile">Me</Link>
-							<a href="/" onClick={logout}>Logout</a>
-						</React.Fragment>
+							<a href="/" onClick={logout}>
+								Logout
+							</a>
+						</>
 					) : (
-						<React.Fragment>
+						<>
 							<Link to="/login">Login</Link>
 
 							<Link to="/signup">Signup</Link>
-						</React.Fragment>
+						</>
 					)}
 				</nav>
 			</div>
