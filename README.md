@@ -12,7 +12,7 @@ A social media application that allows users to create an account, add friends t
 ##### User Profile View
 ![User Profile View Screenshot](./assets/images/screenshot3.png)
 
-Visit site [here](https://color-palette-customizer.herokuapp.com/).
+Visit site [here](https://deep-thoughts-xo.herokuapp.com/)
 
 ## Table of Contents
   * [Installation](#installation)
